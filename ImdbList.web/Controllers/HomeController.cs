@@ -38,14 +38,11 @@ namespace ImdbList.web.Controllers
                     if(popModel.items.Count != 0) {
                         popModel.items = popModel.items.GetRange(0, 10);
                     }
-                    /*var popModel = new PopularMoviesResultModel();
-                    popModel.items = Movies;*/
                     return View(popModel);
                 }
                 else
                 {
-                    Console.WriteLine("Internal server Error");
-                    return View();
+                    return Error();
                 }
             }
         }

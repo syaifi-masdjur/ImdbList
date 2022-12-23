@@ -43,17 +43,12 @@
             let rest = $.get(url, function(res)
             {
 
-                console.log(res);
-
                 if (res.errorMessage !== ""){
                     $('#popularMovies').html(res.errorMessage);
-                    console.log(res.errorMessage);
                     return;
                 }
 
                 popularResult = res.items;
-                //categories
-                //console.log(popularResult);
                 let cats = new Array(popularResult.length)
                 let pops = new Array(popularResult.length)
                 let max = 10;
