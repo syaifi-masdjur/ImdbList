@@ -1,0 +1,93 @@
+﻿@model PopularMoviesResultModel;
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Most Popular Movies In IMDB</h1>
+<hr/>
+<div class="text-center">
+    <table class="table table-responsive table-striped" >
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Full Title</th>
+                <th>IMDB Rating</th>
+           </tr>
+        </thead>
+        <tbody>
+            @foreach(var itm in Model.items)
+            {
+                <tr>
+                    <td>@itm.title</td>
+                    <td>@itm.fullTitle</td>
+                    <td>@itm.imDbRating</td>
+               </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<hr/>
+<div id="popularMovies" class="border mt-lg-5 p-5">
+    Please Wait..
+</div>
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function(){
+            popularMovies();
+        })
+
+        function popularMovies(){
+            var url = "https://imdb-api.com/en/API/MostPopularMovies/k_48b29ynt";
+            let rest = $.get(url, function(res)
+            {
+
+                console.log(res);
+
+                if (res.errorMessage !== ""){
+                    $('#popularMovies').html(res.errorMessage);
+                    console.log(res.errorMessage);
+                    return;
+                }
+
+                popularResult = res.items;
+                //categories
+                //console.log(popularResult);
+                let cats = new Array(popularResult.length)
+                let pops = new Array(popularResult.length)
+                let max = 10;
+                popularResult.forEach(function (o, i, arr) {
+                    cats[i] = o.title;
+                    pops[i] = Number(o.imDbRating);
+                    if (i > max) {
+                        arr.length = i + 1; 
+                    };
+                });
+
+                const chart = Highcharts.chart('popularMovies', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Popular Movies'
+                    },
+                    xAxis: {
+                        categories: cats
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'IMDB '
+                        }
+                    },
+                    series: [{
+                        name: 'IMDB Rating',
+                        data: pops
+                    }]
+                });
+
+            });
+        }
+
+    </script>
+}
